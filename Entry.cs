@@ -78,7 +78,7 @@ namespace Terraria.ModKit
         public static void Initialise()
         {
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.2\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.3\n"+ Main.versionNumber;
 
             //Main.OnPostDraw += MainOnOnPostDraw;
 
@@ -333,6 +333,9 @@ namespace Terraria.ModKit
                             KeyStatus.Add("DecreaseFlySpeed", new List<string> {CreativeInput[6].ToString()});
                         if (!KeyStatus.ContainsKey("InstantRevive"))
                             KeyStatus.Add("InstantRevive", new List<string> {CreativeInput[7].ToString()});
+                        if (!KeyStatus.ContainsKey("InstantRevive"))
+                            KeyStatus.Add("InstantRevive", new List<string> { CreativeInput[7].ToString() });
+
 
                         PlayerInput.OnBindingChange += BindingChanged;
 
@@ -341,6 +344,8 @@ namespace Terraria.ModKit
                         //We use catch statement to notify if injection failed
                         // ReSharper disable once PossibleNullReferenceException
                         method2.Invoke(controlsUI, new object[] { });
+
+                        
 
                         Console.WriteLine("Successfuly added new panel");
                     }
@@ -351,6 +356,8 @@ namespace Terraria.ModKit
                     }
                 }
             }
+
+            
 
             if (!firstUpdate)
             {

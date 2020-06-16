@@ -6,6 +6,7 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameInput;
 using Terraria.UI;
 
 namespace Terraria.ModKit
@@ -105,7 +106,7 @@ namespace Terraria.ModKit
     {
         public static bool Visible = true;
 
-        private UIHoverImageButton cycleMode, flyMode, godMode, changeDifficulty;
+        private UIHoverImageButton cycleMode, flyMode, godMode, changeDifficulty, lockOn;
         private CheatPannel mainPannel, difficultyPannel;
 
         public override void OnInitialize()
@@ -166,6 +167,20 @@ namespace Terraria.ModKit
             journeyButton.Left.Set(150, 0);
             journeyButton.Top.Set(0, 0);
             mainPannel.Append(journeyButton);
+
+            //texture = Main.Assets.Request<Texture2D>(@"Images\UI\Wires_2");
+            //journeyButton = lockOn = new UIHoverImageButton(texture, texture.Frame(), "Enable LockOn system",
+            //    () =>
+            //    {
+            //        LockOnHelper.ForceUsability = !LockOnHelper.ForceUsability;
+            //        lockOn.Color = LockOnHelper.CanUseLockonSystem() ? Color.Aqua : Color.White;
+            //    });
+            //journeyButton.Left.Set(200, 0);
+            //journeyButton.Top.Set(0, 0);
+            //mainPannel.Append(journeyButton);
+
+
+
 
 
             difficultyPannel = new CheatPannel(65 * 2);

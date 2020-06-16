@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Terraria.ModKit
@@ -15,9 +16,11 @@ namespace Terraria.ModKit
             return target.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(null, param);
         }
 
-        public static void InvokeS(Assembly assembly,string typename, string methodName, params object[] param)
+        public static object InvokeS(Assembly assembly,string typename, string methodName, params object[] param)
         {
-            assembly.GetType(typename).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, param);
+            var type = assembly.GetType(typename);
+            var method = type.GetMethod(methodName, param.Select((x) => x.GetType()).ToArray());
+            return method?.Invoke(null, param);
         }
 
         public static T Invoke<T>(object target, string methodName, BindingFlags flags= BindingFlags.NonPublic | BindingFlags.Instance, params object[] param)
