@@ -6,7 +6,9 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameContent.UI.States;
 using Terraria.GameInput;
+using Terraria.ModKit.Tools.REPL;
 using Terraria.UI;
 
 namespace Terraria.ModKit
@@ -35,7 +37,7 @@ namespace Terraria.ModKit
 
         public override void Update(GameTime gameTime)
         {
-            if(!CheatState.Visible || !((CheatPannel)Parent).Visible)
+            if(!CheatState.Visible)
                 return;
             base.Update(gameTime);
             if (ContainsPoint(Main.MouseScreen) && Main.mouseLeft)
@@ -75,8 +77,8 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.mouseInterface = true;
             }
 
-            Top.Set(Main.screenHeight - offset, 0f);
-            Left.Set((float) Main.screenWidth / 2 - Width.Pixels / 2, 0f);
+                Top.Set((Main.screenHeight - offset) , 0f);
+            Left.Set(((float) Main.screenWidth / 2 - Width.Pixels / 2) , 0f);
             BackgroundColor = Color.BlanchedAlmond.Opacity(0.1f);
         }
 
@@ -100,22 +102,27 @@ namespace Terraria.ModKit
                 return;
             base.DrawChildren(spriteBatch);
         }
+
+
+
     }
 
-    class CheatState : UIState
+    internal class CheatState : UIState
     {
         public static bool Visible = true;
 
         private UIHoverImageButton cycleMode, flyMode, godMode, changeDifficulty, lockOn;
         private CheatPannel mainPannel, difficultyPannel;
+        //private static REPLTool tools;
 
         public override void OnInitialize()
         {
-            base.OnInitialize();
+ 
+
             mainPannel = new CheatPannel();
-            mainPannel.Left.Set((float) Main.screenWidth / 2 - Width.Pixels, 0f);
-            mainPannel.Top.Set(Main.screenHeight - 64, 0f);
-            mainPannel.Width.Set(210, 0f);
+            mainPannel.Left.Set(((float) Main.screenWidth / 2 - Width.Pixels) / Main.UIScale, 0f);
+            mainPannel.Top.Set((Main.screenHeight - 64)/Main.UIScale, 0f);
+            mainPannel.Width.Set(310, 0f);
             mainPannel.Height.Set(55f, 0f);
             mainPannel.BackgroundColor = Color.BlanchedAlmond.Opacity(0.3f);
             Append(mainPannel);
@@ -126,6 +133,7 @@ namespace Terraria.ModKit
                 () =>
                 {
                     Entry.CycleMode();
+                    
                     cycleMode.Color = Main.GameMode == GameModeData.CreativeMode.Id ? Color.Gold : Color.White;
                 });
             journeyButton.Left.Set(0, 0);
@@ -154,7 +162,7 @@ namespace Terraria.ModKit
             });
             journeyButton.Left.Set(100, 0);
             journeyButton.Top.Set(0, 0);
-            mainPannel.Append(journeyButton);
+            mainPannel.Append(journeyButton); 
 
 
             texture = Main.Assets.Request<Texture2D>(@"Images\UI\WorldCreation\IconDifficultyMaster");
@@ -168,19 +176,36 @@ namespace Terraria.ModKit
             journeyButton.Top.Set(0, 0);
             mainPannel.Append(journeyButton);
 
-            //texture = Main.Assets.Request<Texture2D>(@"Images\UI\Wires_2");
-            //journeyButton = lockOn = new UIHoverImageButton(texture, texture.Frame(), "Enable LockOn system",
-            //    () =>
-            //    {
-            //        LockOnHelper.ForceUsability = !LockOnHelper.ForceUsability;
-            //        lockOn.Color = LockOnHelper.CanUseLockonSystem() ? Color.Aqua : Color.White;
-            //    });
-            //journeyButton.Left.Set(200, 0);
-            //journeyButton.Top.Set(0, 0);
-            //mainPannel.Append(journeyButton);
+            texture = Main.Assets.Request<Texture2D>(@"Images\Item_1315");
+            journeyButton = lockOn = new UIHoverImageButton(texture, texture.Frame(), "Reveal map",
+                () =>
+                {
+                    if (Main.netMode == 0)
+                        Entry.RevealWholeMap();
+                    else
+                    {
+                        Point center = Main.player[Main.myPlayer].Center.ToTileCoordinates();
+                        Entry.RevealAroundPoint(center.X, center.Y);
+                    }
+
+                });
+            journeyButton.Left.Set(200, 0);
+            journeyButton.Top.Set(0, 0);
+            mainPannel.Append(journeyButton);
+
+            texture = Main.Assets.Request<Texture2D>(@"Images\ui\Settings_Inputs_2");
+            journeyButton = new UIHoverImageButton(texture, texture.Frame(2, 2, 1, 0), "Open REPL",
+                () =>
+                {
+                    Entry.tools.visible = !Entry.tools.visible;
+                });
+            journeyButton.Left.Set(250, 0);
+            journeyButton.Top.Set(0, 0);
+            mainPannel.Append(journeyButton);
 
 
-
+            //var tinker = new UITinker();
+            //Append(tinker);
 
 
             difficultyPannel = new CheatPannel(65 * 2);
@@ -235,6 +260,20 @@ namespace Terraria.ModKit
             journeyButton.Left.Set(150, 0);
             journeyButton.Top.Set(0, 0);
             difficultyPannel.Append(journeyButton);
+
+            base.OnInitialize();
         }
+
+        //public override void Update(GameTime gameTime)
+        //{
+        //    base.Update(gameTime);
+        //    tools.UIUpdate();
+        //}
+
+        //public override void Draw(SpriteBatch spriteBatch)
+        //{
+        //    base.Draw(spriteBatch);
+        //    tools.UIDraw();
+        //}
     }
 }

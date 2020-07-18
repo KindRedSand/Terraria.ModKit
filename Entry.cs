@@ -11,7 +11,10 @@ using Terraria.GameContent.UI.States;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModKit.Razorwing.Overrides;
+using Terraria.ModKit.Tools.REPL;
 using Terraria.UI;
+// ReSharper disable PossibleLossOfFraction
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 namespace Terraria.ModKit
 {
@@ -78,9 +81,7 @@ namespace Terraria.ModKit
         public static void Initialise()
         {
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.3\n"+ Main.versionNumber;
-
-            //Main.OnPostDraw += MainOnOnPostDraw;
+            Main.versionNumber = "ModKit v0.4\n"+ Main.versionNumber;
 
             Config = new CreativeInputConfig(Storage = new ModStorage(@"Creative"));
 
@@ -104,6 +105,10 @@ namespace Terraria.ModKit
             //InGameUI 36
             inter = new UserInterface();
             inter.SetState(new CheatState());
+
+            tools = new REPLTool();
+            tools.ClientInitialize();
+
         }
 
         private static void SetupFlySpeed()
@@ -279,6 +284,8 @@ namespace Terraria.ModKit
             }
         }
 
+
+        internal static REPLTool tools;
         private static void Update()
         {
             if (Main.gameMenu) return;
@@ -295,7 +302,8 @@ namespace Terraria.ModKit
                             return false;
                         if (CheatState.Visible)
                             inter.Draw(Main.spriteBatch, new GameTime());
-
+                        if(tools.visible)
+                            tools.UIDraw();
                         return true;
                     }));
                 }
@@ -347,7 +355,7 @@ namespace Terraria.ModKit
 
                         
 
-                        Console.WriteLine("Successfuly added new panel");
+                        Console.WriteLine("Successively added new panel");
                     }
                     catch (Exception e)
                     {
@@ -357,13 +365,25 @@ namespace Terraria.ModKit
                 }
             }
 
-            
-
             if (!firstUpdate)
             {
                 firstUpdate = true;
                 BindingChanged();
             }
+
+#if DEBUG
+            if (Main.keyState.IsKeyDown(Keys.R) && Main.oldKeyState.IsKeyUp(Keys.R) && Main.keyState.PressingControl())
+            {
+                tools.ClientInitialize();
+            }
+#endif
+            //All our ui get broken when UI Scale != 1
+            Main.UIScale = 1f;
+
+            NPC.NewNPC((int)Main.LocalPlayer.position.X, (int)Main.LocalPlayer.position.Y-300, 636);
+
+            if (tools.visible)
+                tools.UIUpdate();
 
             if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 1000 &&
                 Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
@@ -462,17 +482,14 @@ namespace Terraria.ModKit
                 {
                     Main.LocalPlayer.velocity = -delta;
                     Main.LocalPlayer.position += -delta;
-                    //Main.LocalPlayer.position -= new Vector2(0, 0.6f);
-                    //Main.LocalPlayer.releaseUseTile = true;
                 }
                 else
                 {
                     Main.LocalPlayer.velocity = Vector2.Zero;
                     Main.LocalPlayer.oldVelocity = Vector2.Zero;
-                    //Main.LocalPlayer.position -= new Vector2(0, 0.6f);
-                    //Main.LocalPlayer.releaseUseTile = true;
                 }
 
+                Main.LocalPlayer.fallStart = (int)(Main.LocalPlayer.position.Y / 16f);
 
                 if (Main.keyState.IsKeyDown(FlyInput[0]))
                     Main.LocalPlayer.position.Y -= flyDelta;
@@ -490,17 +507,81 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.respawnTimer = 0;
             }
 
-            inter.Update(new GameTime());
-            //inter.Update(Reflect.GetF<GameTime>(Main.instance, "_drawInterfaceGameTime"));
+            if (Main.mapFullscreen)
+            {
+                if (Main.mouseRight && Main.keyState.IsKeyUp(Keys.LeftControl))
+                {
+                    int mapWidth = Main.maxTilesX * 16;
+                    int mapHeight = Main.maxTilesY * 16;
+                    Vector2 cursorPosition = new Vector2(Main.mouseX, Main.mouseY);
 
-            //if (Main.keyState.IsKeyDown(Keys.RightControl))
-            //{
-            //    Main.LocalPlayer.ghost = true;
-            //}
-            //else
-            //{
-            //    Main.LocalPlayer.ghost = false;
-            //}
+                    cursorPosition.X -= Main.screenWidth / 2;
+                    cursorPosition.Y -= Main.screenHeight / 2;
+
+                    Vector2 mapPosition = Main.mapFullscreenPos;
+                    Vector2 cursorWorldPosition = mapPosition;
+
+                    cursorPosition /= 16;
+                    cursorPosition *= 16 / Main.mapFullscreenScale;
+                    cursorWorldPosition += cursorPosition;
+                    cursorWorldPosition *= 16;
+
+                    Player player = Main.player[Main.myPlayer];
+                    cursorWorldPosition.Y -= player.height;
+                    if (cursorWorldPosition.X < 0) cursorWorldPosition.X = 0;
+                    else if (cursorWorldPosition.X + player.width > mapWidth)
+                        cursorWorldPosition.X = mapWidth - player.width;
+                    if (cursorWorldPosition.Y < 0) cursorWorldPosition.Y = 0;
+                    else if (cursorWorldPosition.Y + player.height > mapHeight)
+                        cursorWorldPosition.Y = mapHeight - player.height;
+
+                    if (Main.netMode == 0) // single
+                    {
+                        player.Teleport(cursorWorldPosition, 1);
+                        player.position = cursorWorldPosition;
+                        player.velocity = Vector2.Zero;
+                        player.fallStart = (int) (player.position.Y / 16f);
+                    }
+                    else // 1, client
+                    {
+                        NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, cursorWorldPosition.X,
+                            cursorWorldPosition.Y, 1);
+                        player.Teleport(cursorWorldPosition, 1);
+                        player.position = cursorWorldPosition;
+                        player.velocity = Vector2.Zero;
+                        player.fallStart = (int)(player.position.Y / 16f);
+                    }
+                }
+            }
+
+            inter.Update(new GameTime());
+        }
+
+        public static void RevealWholeMap()
+        {
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                for (int j = 0; j < Main.maxTilesY; j++)
+                {
+                    if (WorldGen.InWorld(i, j))
+                        Main.Map.Update(i, j, 255);
+                }
+            }
+            Main.refreshMap = true;
+        }
+
+        public static void RevealAroundPoint(int x, int y)
+        {
+            const int MapRevealSize = 300;
+            for (int i = x - MapRevealSize / 2; i < x + MapRevealSize / 2; i++)
+            {
+                for (int j = y - MapRevealSize / 2; j < y + MapRevealSize / 2; j++)
+                {
+                    if (WorldGen.InWorld(i, j))
+                        Main.Map.Update(i, j, 255);
+                }
+            }
+            Main.refreshMap = true;
         }
 
         public static void ChangeFly()
@@ -525,6 +606,9 @@ namespace Terraria.ModKit
                 oldPlayerMode = Main.LocalPlayer.difficulty;
                 Main.GameMode = GameModeData.CreativeMode.Id;
                 Main.LocalPlayer.difficulty = 3;
+                if (!Main.playerInventory)
+                    Main.playerInventory = true;
+                Main.CreativeMenu.ToggleMenu();
                 Console.WriteLine("Journey Mode Enabled");
             }
         }
