@@ -380,7 +380,6 @@ namespace Terraria.ModKit
             //All our ui get broken when UI Scale != 1
             Main.UIScale = 1f;
 
-            NPC.NewNPC((int)Main.LocalPlayer.position.X, (int)Main.LocalPlayer.position.Y-300, 636);
 
             if (tools.visible)
                 tools.UIUpdate();
