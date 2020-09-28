@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Razorwing.Framework.Extensions.ColorExtensions;
@@ -77,7 +78,7 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.mouseInterface = true;
             }
 
-                Top.Set((Main.screenHeight - offset) , 0f);
+            Top.Set((Main.screenHeight - offset) , 0f);
             Left.Set(((float) Main.screenWidth / 2 - Width.Pixels / 2) , 0f);
             BackgroundColor = Color.BlanchedAlmond.Opacity(0.1f);
         }
@@ -111,17 +112,18 @@ namespace Terraria.ModKit
     {
         public static bool Visible = true;
 
-        private UIHoverImageButton cycleMode, flyMode, godMode, changeDifficulty, lockOn;
-        private CheatPannel mainPannel, difficultyPannel;
+        private UIHoverImageButton cycleMode, flyMode, godMode, changeDifficulty, lockOn, copyTools;
+        private static List<UIHoverImageButton> buttons = new List<UIHoverImageButton>();
+        private static CheatPannel mainPannel, difficultyPannel, copyPannel;
         //private static REPLTool tools;
 
         public override void OnInitialize()
         {
  
-
+            
             mainPannel = new CheatPannel();
-            mainPannel.Left.Set(((float) Main.screenWidth / 2 - Width.Pixels) / Main.UIScale, 0f);
-            mainPannel.Top.Set((Main.screenHeight - 64)/Main.UIScale, 0f);
+            mainPannel.Left.Set(-(310/2), 0.5f);
+            mainPannel.Top.Set(-55, 1f);
             mainPannel.Width.Set(310, 0f);
             mainPannel.Height.Set(55f, 0f);
             mainPannel.BackgroundColor = Color.BlanchedAlmond.Opacity(0.3f);
@@ -136,8 +138,7 @@ namespace Terraria.ModKit
                     
                     cycleMode.Color = Main.GameMode == GameModeData.CreativeMode.Id ? Color.Gold : Color.White;
                 });
-            journeyButton.Left.Set(0, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
 
             texture = Main.Assets.Request<Texture2D>(@"Images\Item_493");
@@ -147,8 +148,7 @@ namespace Terraria.ModKit
                     Entry.ChangeFly();
                     flyMode.Color = Entry.fly ? Color.Gold : Color.White;
                 });
-            journeyButton.Left.Set(50, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
 
             texture = Main.Assets.Request<Texture2D>(@"Images\UI\Creative\Infinite_Powers");
@@ -160,8 +160,7 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.creativeGodMode = !Main.LocalPlayer.creativeGodMode;
                 godMode.Color = Main.LocalPlayer.creativeGodMode ? Color.Gold : Color.White;
             });
-            journeyButton.Left.Set(100, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton); 
 
 
@@ -172,8 +171,7 @@ namespace Terraria.ModKit
                     difficultyPannel.Visible = !difficultyPannel.Visible;
                     changeDifficulty.Color = difficultyPannel.Visible ? Color.Gold : Color.White;
                 });
-            journeyButton.Left.Set(150, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
 
             texture = Main.Assets.Request<Texture2D>(@"Images\Item_1315");
@@ -189,9 +187,21 @@ namespace Terraria.ModKit
                     }
 
                 });
-            journeyButton.Left.Set(200, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
+
+            texture = Main.Assets.Request<Texture2D>(@"Images\ui\Camera_2");
+            journeyButton = copyTools = new UIHoverImageButton(texture, texture.Frame(), "Open Tile Copy Tool",
+                () =>
+                {
+                    difficultyPannel.Visible = false;
+                    Copy.Visible = !Copy.Visible;
+                    copyTools.Color = Copy.Visible ? Color.Gold : Color.White;
+
+                });
+            buttons.Add(journeyButton);
+            mainPannel.Append(journeyButton);
+
 
             texture = Main.Assets.Request<Texture2D>(@"Images\ui\Settings_Inputs_2");
             journeyButton = new UIHoverImageButton(texture, texture.Frame(2, 2, 1, 0), "Open REPL",
@@ -199,8 +209,7 @@ namespace Terraria.ModKit
                 {
                     Entry.tools.visible = !Entry.tools.visible;
                 });
-            journeyButton.Left.Set(250, 0);
-            journeyButton.Top.Set(0, 0);
+            buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
 
 
@@ -261,7 +270,30 @@ namespace Terraria.ModKit
             journeyButton.Top.Set(0, 0);
             difficultyPannel.Append(journeyButton);
 
+
+            int w = 10;
+            foreach (var it in buttons)
+            {
+                it.Left.Set(w, 0f);
+                w += 50;
+            }
+            mainPannel.Width.Set(w, 0f);
+            mainPannel.Left.Set(-(w / 2), 0.5f);
+
             base.OnInitialize();
+        }
+
+        public static void AddButton(UIHoverImageButton btn)
+        {
+            buttons.Add(btn);
+            int w = 10;
+            foreach (var it in buttons)
+            {
+                it.Left.Set(w, 0f);
+                w += 50;
+            }
+            mainPannel.Width.Set(w, 0f);
+            mainPannel.Left.Set(-(w / 2), 0.5f);
         }
 
         //public override void Update(GameTime gameTime)

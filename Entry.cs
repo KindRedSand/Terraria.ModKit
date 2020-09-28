@@ -101,15 +101,23 @@ namespace Terraria.ModKit
             CreativeInput[5] = creativeConfig.Get<Keys>(InputConfig.IncreaseFlySpeed);
             CreativeInput[6] = creativeConfig.Get<Keys>(InputConfig.DecreaseFlySpeed);
 
+            copy = new Copy();
+            copy.initialize();
+            ucopy = new UserInterface();
+            ucopy.SetState(copy);
 
             //InGameUI 36
             inter = new UserInterface();
             inter.SetState(new CheatState());
 
+           
+
             tools = new REPLTool();
             tools.ClientInitialize();
 
         }
+
+        private static UserInterface ucopy;
 
         private static void SetupFlySpeed()
         {
@@ -286,6 +294,7 @@ namespace Terraria.ModKit
 
 
         internal static REPLTool tools;
+        internal static Copy copy;
         private static void Update()
         {
             if (Main.gameMenu) return;
@@ -296,14 +305,20 @@ namespace Terraria.ModKit
                 if (installUI == 0)
                 {
                     var layers = Reflect.GetF<List<GameInterfaceLayer>>(Main.instance, "_gameInterfaceLayers");
-                    layers.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>
+                    layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>
                     {
                         if (Main.gameMenu)
                             return false;
+                        if (Copy.Visible)
+                        {
+                            ucopy.Draw(Main.spriteBatch, new GameTime());
+                            copy.UIDraw();
+                        }
                         if (CheatState.Visible)
                             inter.Draw(Main.spriteBatch, new GameTime());
                         if(tools.visible)
                             tools.UIDraw();
+                        
                         return true;
                     }));
                 }
@@ -371,18 +386,17 @@ namespace Terraria.ModKit
                 BindingChanged();
             }
 
-#if DEBUG
-            if (Main.keyState.IsKeyDown(Keys.R) && Main.oldKeyState.IsKeyUp(Keys.R) && Main.keyState.PressingControl())
-            {
-                tools.ClientInitialize();
-            }
-#endif
             //All our ui get broken when UI Scale != 1
-            Main.UIScale = 1f;
+            //Main.UIScale = 1f;
 
+
+
+            //NPC.NewNPC((int)Main.LocalPlayer.position.X, (int)Main.LocalPlayer.position.Y-300, 636);
 
             if (tools.visible)
                 tools.UIUpdate();
+
+           
 
             if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 1000 &&
                 Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
@@ -552,8 +566,9 @@ namespace Terraria.ModKit
                     }
                 }
             }
-
+            ucopy.Update(new GameTime());
             inter.Update(new GameTime());
+
         }
 
         public static void RevealWholeMap()

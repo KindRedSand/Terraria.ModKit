@@ -10,7 +10,6 @@ namespace Terraria.ModKit.Tools.REPL
         internal bool visible;
         internal string toggleTooltip;
 		internal static REPLBackend replBackend;
-		//internal static UserInterface Terraria.ModKitUserInterface;
 		internal static REPLUI toolKit;
 		internal static bool EyedropperActive;
         internal UserInterface userInterface;
@@ -54,7 +53,9 @@ namespace Terraria.ModKit.Tools.REPL
 		internal void UIDraw()
 		{
 			if (visible)
-			{
+            {
+                var f = Main.UIScale;
+                Main.UIScale = 1f;
                 toolKit.Draw(Main.spriteBatch);
 				if (EyedropperActive)
 				{
@@ -62,7 +63,7 @@ namespace Terraria.ModKit.Tools.REPL
 					Vector2 worldCoords = tileCoords.ToVector2() * 16;
 					Vector2 screenCoords = worldCoords - Main.screenPosition;
 
-					DrawBorderedRect(Main.spriteBatch, Color.LightBlue * 0.1f, Color.Blue * 0.3f, screenCoords, new Vector2(16,16), 5);
+					DrawBorderedRect(Main.spriteBatch, Color.LightBlue * 0.1f, Color.Blue * 0.7f, screenCoords, new Vector2(16,16), 5);
 
 					if(!Main.LocalPlayer.mouseInterface && Main.mouseLeft)
 					{
@@ -74,7 +75,9 @@ namespace Terraria.ModKit.Tools.REPL
 
 					Main.LocalPlayer.mouseInterface = true;
 				}
-			}
+
+                Main.UIScale = f;
+            }
 		}
 		internal void Toggled()
 		{
