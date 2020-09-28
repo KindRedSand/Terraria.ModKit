@@ -46,7 +46,7 @@ namespace Terraria.ModKit
             {
                 Left = new StyleDimension(-(180) / 2, 0.5f),
                 Top = new StyleDimension(-110, 1f),
-                Width = new StyleDimension(180, 0f),
+                Width = new StyleDimension(200, 0f),
                 Height = new StyleDimension(55, 0f),
                 BackgroundColor = Color.BlanchedAlmond.Opacity(0.3f),
             };

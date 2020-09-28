@@ -78,8 +78,8 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.mouseInterface = true;
             }
 
-            Top.Set((Main.screenHeight - offset) , 0f);
-            Left.Set(((float) Main.screenWidth / 2 - Width.Pixels / 2) , 0f);
+            Top.Set(-offset * (Main.GameZoomTarget > 1 ? Main.GameZoomTarget * Main.GameZoomTarget * 1.3f : 1), 1f);
+            Left.Set((-Width.Pixels / 2) , 0.5f);
             BackgroundColor = Color.BlanchedAlmond.Opacity(0.1f);
         }
 

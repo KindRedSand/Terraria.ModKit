@@ -59,9 +59,9 @@ namespace Terraria.ModKit
         private static int installUI = 5, oldMode;
         private static byte oldPlayerMode;
         private static bool instantRevive;
-        internal static CreativeInputConfig Config { get; set; }
+        //internal static CreativeInputConfig Config { get; set; }
         internal static DesktopStorage Storage { get; set; }
-        internal static ResourceStore<byte[]> Store { get; private set; }
+        internal static ResourceStore<byte[]> Store { get; set; }
 
 
         public static void Text(string m)
@@ -77,22 +77,16 @@ namespace Terraria.ModKit
                 }
         }
 
-
         public static void Initialise()
         {
+            Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.4\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.5\n"+ Main.versionNumber;
 
-            Config = new CreativeInputConfig(Storage = new ModStorage(@"Creative"));
-
-            Store = new ResourceStore<byte[]>(new StorageBackedResourceStore(Storage));
-            Store.AddStore(new OnlineStore());
-
-            Logger.Storage = Storage;
-            Logger.Level = LogLevel.Debug;
-
+            Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
             creativeConfig.Save();
+            Logger.Log("Loading keys...");
             CreativeInput[0] = creativeConfig.Get<Keys>(InputConfig.CycleMode);
             CreativeInput[1] = creativeConfig.Get<Keys>(InputConfig.FlyMode);
             CreativeInput[2] = creativeConfig.Get<Keys>(InputConfig.UnlockAllItems);
@@ -101,20 +95,22 @@ namespace Terraria.ModKit
             CreativeInput[5] = creativeConfig.Get<Keys>(InputConfig.IncreaseFlySpeed);
             CreativeInput[6] = creativeConfig.Get<Keys>(InputConfig.DecreaseFlySpeed);
 
+            Logger.Log("Initializing UI...");
             copy = new Copy();
             copy.initialize();
             ucopy = new UserInterface();
             ucopy.SetState(copy);
+            Logger.Log("Copy done!");
 
             //InGameUI 36
             inter = new UserInterface();
             inter.SetState(new CheatState());
-
-           
+            Logger.Log("CheatPanel done!");
 
             tools = new REPLTool();
             tools.ClientInitialize();
-
+            Logger.Log("REPL Tools done!");
+            Logger.Log("Mod base initialization finished!");
         }
 
         private static UserInterface ucopy;
@@ -168,6 +164,7 @@ namespace Terraria.ModKit
 
         private static void BindingChanged()
         {
+            Logger.Log("Remapping controls...");
             inputDic = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].WritePreferences();
             if (Enum.TryParse(inputDic["Up"][0], true, out Keys r))
                 FlyInput[0] = r;
@@ -290,6 +287,7 @@ namespace Terraria.ModKit
                     CreativeInput[7] = key;
                 }
             }
+            Logger.Log("Remapping controls done!");
         }
 
 
@@ -304,6 +302,7 @@ namespace Terraria.ModKit
                 installUI--;
                 if (installUI == 0)
                 {
+                    Logger.Log("Installing InterfaceLayer...");
                     var layers = Reflect.GetF<List<GameInterfaceLayer>>(Main.instance, "_gameInterfaceLayers");
                     layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>
                     {
@@ -321,6 +320,7 @@ namespace Terraria.ModKit
                         
                         return true;
                     }));
+                    Logger.Log("Installing InterfaceLayer done!");
                 }
             }
 
@@ -328,18 +328,21 @@ namespace Terraria.ModKit
             {
                 if (Main.InGameUI.CurrentState is UIManageControls ui)
                 {
-                    Console.WriteLine("Hijack UIManageControls. Adding own input panel...");
+                    Logger.Log("Hijack UIManageControls. Adding own input panel...");
                     controlsUI = ui;
                     try
                     {
+                        Logger.Log("Getting \"CreateBindingGroup\" method...");
                         var pan = Reflect.Invoke<UISortableElement>(controlsUI, "CreateBindingGroup", 3,
                             creativeControlsString, InputMode.Keyboard);
+                        Logger.Log("Adding new panel to _bindKeyboard...");
                         Reflect.GetF<List<UIElement>>(controlsUI, "_bindsKeyboard").Add(pan);
+                        Logger.Log("Adding new panel to _bindKeyboardUI...");
                         Reflect.GetF<List<UIElement>>(controlsUI, "_bindsKeyboardUI").Add(pan);
 
                         var KeyStatus = PlayerInput.CurrentProfile.InputModes[InputMode.Keyboard].KeyStatus;
 
-
+                        Logger.Log("Registering new input bindings...");
                         if (!KeyStatus.ContainsKey("CycleMode"))
                             KeyStatus.Add("CycleMode", new List<string> {CreativeInput[0].ToString()});
                         if (!KeyStatus.ContainsKey("FlyMode"))
@@ -359,23 +362,20 @@ namespace Terraria.ModKit
                         if (!KeyStatus.ContainsKey("InstantRevive"))
                             KeyStatus.Add("InstantRevive", new List<string> { CreativeInput[7].ToString() });
 
-
                         PlayerInput.OnBindingChange += BindingChanged;
 
+                        Logger.Log("Done! Getting \"FillList\" method...");
                         var method2 = controlsUI.GetType()
                             .GetMethod("FillList", BindingFlags.NonPublic | BindingFlags.Instance);
                         //We use catch statement to notify if injection failed
                         // ReSharper disable once PossibleNullReferenceException
                         method2.Invoke(controlsUI, new object[] { });
 
-                        
-
-                        Console.WriteLine("Successively added new panel");
+                        Logger.Log("Successively added new panel!");
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Reflection failed!");
-                        Console.WriteLine(e);
+                        Logger.Error(e, "Error occured during adding new controls panel!");
                     }
                 }
             }
@@ -401,7 +401,7 @@ namespace Terraria.ModKit
             if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 1000 &&
                 Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
             {
-                Console.WriteLine("Unlocking all items...");
+                Logger.Log("Unlocking all items...");
                 for (int i = 0; i < 5079; i++)
                 {
                     try
@@ -425,7 +425,7 @@ namespace Terraria.ModKit
 
             if (Main.keyState.IsKeyDown(CreativeInput[3]) && Main.oldKeyState.IsKeyUp(CreativeInput[3]))
             {
-                Console.WriteLine("Processing Bestiary...");
+                Logger.Log("Processing Bestiary...");
                 try
                 {
                     foreach (var it in ContentSamples.NpcBestiaryCreditIdsByNpcNetIds)
@@ -438,13 +438,13 @@ namespace Terraria.ModKit
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Error(e, "Error occured while processing bestiarry!");
                 }
             }
 
             if (Main.keyState.IsKeyDown(CreativeInput[4]) && Main.oldKeyState.IsKeyUp(CreativeInput[4]))
             {
-                Console.WriteLine("Clearing Bestiary...");
+                Logger.Log("Clearing Bestiary...");
                 try
                 {
                     Main.BestiaryTracker.Kills.Reset();
@@ -453,7 +453,7 @@ namespace Terraria.ModKit
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Error(e, "Error occured while processing bestiarry!");
                 }
             }
 
@@ -607,12 +607,12 @@ namespace Terraria.ModKit
 
         public static void CycleMode()
         {
-            Console.WriteLine("Changing difficulty...");
+            Logger.Log("Changing difficulty...");
             if (Main.LocalPlayer.difficulty == 3)
             {
                 Main.GameMode = oldMode;
                 Main.LocalPlayer.difficulty = oldPlayerMode;
-                Console.WriteLine("Journey mode disabled");
+                Logger.Log("Journey mode disabled");
             }
             else
             {
@@ -623,7 +623,7 @@ namespace Terraria.ModKit
                 if (!Main.playerInventory)
                     Main.playerInventory = true;
                 Main.CreativeMenu.ToggleMenu();
-                Console.WriteLine("Journey Mode Enabled");
+                Logger.Log("Journey Mode Enabled");
             }
         }
     }

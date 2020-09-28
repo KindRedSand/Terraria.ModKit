@@ -276,6 +276,7 @@ namespace Razorwing.Framework.Logging
                 // add exception output to console / logfile output (but not the LogEntry's message).
                 logOutput += $"\n{ApplyFilters(exception.ToString())}";
 
+
             IEnumerable<string> lines = logOutput
                                         .Replace(@"\r\n", @"\n")
                                         .Split('\n')
@@ -312,7 +313,10 @@ namespace Razorwing.Framework.Logging
                         using (var stream = Storage.GetStream(Filename, FileAccess.Write, FileMode.Append))
                         using (var writer = new StreamWriter(stream))
                             foreach (var line in lines)
+                            {
+                                Console.WriteLine(line);
                                 writer.WriteLine(line);
+                            }
                     }
                     catch
                     {

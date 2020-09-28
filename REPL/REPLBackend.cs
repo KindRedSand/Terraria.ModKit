@@ -83,7 +83,7 @@ namespace Terraria.ModKit.REPL
 			}
 			try
 			{
-				evaluator.Run("using Terraria; using Terraria.ModKit;");
+				evaluator.Run("using Terraria;");
 			}
 			catch (Exception)
 			{
