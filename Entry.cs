@@ -304,8 +304,10 @@ namespace Terraria.ModKit
                 {
                     Logger.Log("Installing InterfaceLayer...");
                     var layers = Reflect.GetF<List<GameInterfaceLayer>>(Main.instance, "_gameInterfaceLayers");
-                    layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>
+                    layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>//36
                     {
+                        var s = Main.UIScale;
+                        Main.UIScale = 1f;
                         if (Main.gameMenu)
                             return false;
                         if (Copy.Visible)
@@ -317,10 +319,11 @@ namespace Terraria.ModKit
                             inter.Draw(Main.spriteBatch, new GameTime());
                         if(tools.visible)
                             tools.UIDraw();
-                        
+                        Main.UIScale = s;
                         return true;
                     }));
                     Logger.Log("Installing InterfaceLayer done!");
+                    
                 }
             }
 
@@ -394,9 +397,14 @@ namespace Terraria.ModKit
             //NPC.NewNPC((int)Main.LocalPlayer.position.X, (int)Main.LocalPlayer.position.Y-300, 636);
 
             if (tools.visible)
+            {
+                var s = Main.UIScale;
+                Main.UIScale = 1f;
                 tools.UIUpdate();
+                Main.UIScale = s;
+            }
 
-           
+
 
             if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 1000 &&
                 Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
@@ -566,9 +574,12 @@ namespace Terraria.ModKit
                     }
                 }
             }
+
+            var ss = Main.UIScale;
+            Main.UIScale = 1f;
             ucopy.Update(new GameTime());
             inter.Update(new GameTime());
-
+            Main.UIScale = ss;
         }
 
         public static void RevealWholeMap()

@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B3BE7500-DC18-458E-9E7A-A848087B1970}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Terraria.ModKit</RootNamespace>
+    <AssemblyName>Terraria.ModKit</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Game\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Graphics\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.CSharp.4.0.0.143\lib\4.5\Mono.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ReLogic, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Programs\Steam\SteamApps\common\Terraria\ReLogic.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\VanillaTerrariaTwitch\bin\Debug\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Terraria">
+      <HintPath>D:\Programs\Steam\SteamApps\common\Terraria\Terraria.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CheatPannel.cs" />
+    <Compile Include="CreativeInputConfig.cs" />
+    <Compile Include="Entry.cs" />
+    <Compile Include="EntryPoint.cs" />
+    <Compile Include="Razorwing.Framework\BaseColour.cs" />
+    <Compile Include="Razorwing.Framework\ColorExtensions.cs" />
+    <Compile Include="Razorwing.Overrides\ModStorage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\BufferStack.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\InvokeOnDisposal.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\IReadOnlyDependencyContainer.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\ObjectStack.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\ObjectUsage.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\TimedExpiryCache.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\TripleBuffer.cs" />
+    <Compile Include="Razorwing.Framework\Allocation\ValueInvokeOnDisposal.cs" />
+    <Compile Include="Razorwing.Framework\Caching\Cached.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Bindable.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableBool.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableDouble.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableFloat.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableInt.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableLong.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\BindableNumber.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\ConfigManager.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\FrameSync.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\FrameworkConfigManager.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\FrameworkDebugConfig.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IBindable.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\ICanBeDisabled.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IConfigManager.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IHasDefaultValue.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IHasDescription.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IniConfigManager.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IParseable.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\IUnbindable.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\NonNullableBindable.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Tracking\ITrackableConfigManager.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Tracking\ITrackedSetting.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Tracking\SettingDescription.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Tracking\TrackedSetting.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\Tracking\TrackedSettings.cs" />
+    <Compile Include="Razorwing.Framework\Configuration\WindowMode.cs" />
+    <Compile Include="Razorwing.Framework\IO\AsyncBufferStream.cs" />
+    <Compile Include="Razorwing.Framework\IO\File\FileSafety.cs" />
+    <Compile Include="Razorwing.Framework\IO\Network\FileWebRequest.cs" />
+    <Compile Include="Razorwing.Framework\IO\Network\UrlEncoding.cs" />
+    <Compile Include="Razorwing.Framework\IO\Network\WebRequest.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\CachedResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\ChangeableResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\DllResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\FileSystemResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\IResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\NamespacedResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\OnlineStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\ResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IO\Stores\StorageBackedResourceStore.cs" />
+    <Compile Include="Razorwing.Framework\IStateful.cs" />
+    <Compile Include="Razorwing.Framework\IUpdateable.cs" />
+    <Compile Include="Razorwing.Framework\Lists\ComparisonComparer.cs" />
+    <Compile Include="Razorwing.Framework\Lists\FuncEqualityComparer.cs" />
+    <Compile Include="Razorwing.Framework\Lists\LazyList.cs" />
+    <Compile Include="Razorwing.Framework\Lists\SortedList.cs" />
+    <Compile Include="Razorwing.Framework\Lists\WeakList.cs" />
+    <Compile Include="Razorwing.Framework\Logging\Logger.cs" />
+    <Compile Include="Razorwing.Framework\Logging\ThrowingTraceListener.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\Blur.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\Easing.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\ExtensionMethods.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\Interpolation.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\NumberFormatter.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\Precision.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\RNG.cs" />
+    <Compile Include="Razorwing.Framework\MathUtils\Validation.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Architecture.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Clipboard.cs" />
+    <Compile Include="Razorwing.Framework\Platform\DesktopStorage.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Linux\LinuxClipboard.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Linux\LinuxStorage.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Linux\Native\Library.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Linux\Sdl\SdlClipboard.cs" />
+    <Compile Include="Razorwing.Framework\Platform\MacOS\MacOSStorage.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Storage.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Windows\Native\Execution.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Windows\TimePeriod.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Windows\WindowsClipboard.cs" />
+    <Compile Include="Razorwing.Framework\Platform\Windows\WindowsStorage.cs" />
+    <Compile Include="Razorwing.Framework\RuntimeInfo.cs" />
+    <Compile Include="Razorwing.Framework\Threading\AtomicCounter.cs" />
+    <Compile Include="Razorwing.Framework\Threading\Scheduler.cs" />
+    <Compile Include="Razorwing.Framework\Threading\ThreadedTaskScheduler.cs" />
+    <Compile Include="Razorwing.Framework\Timing\DecoupleableInterpolatingFramedClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\FramedClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\FramedOffsetClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\FrameTimeInfo.cs" />
+    <Compile Include="Razorwing.Framework\Timing\IAdjustableClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\IClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\IFrameBasedClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\InterpolatingFramedClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\ManualClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\OffsetClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\StopwatchClock.cs" />
+    <Compile Include="Razorwing.Framework\Timing\ThrottledFrameClock.cs" />
+    <Compile Include="Reflect.cs" />
+    <Compile Include="REPL\REPLBackend.cs" />
+    <Compile Include="REPL\REPLTool.cs" />
+    <Compile Include="REPL\REPLUI.cs" />
+    <Compile Include="UIElements\FixedUIScrollBar.cs" />
+    <Compile Include="UIElements\NewUITextBox.cs" />
+    <Compile Include="UIElements\NewUITextBoxMultiLine.cs" />
+    <Compile Include="UIElements\UI2DRange.cs" />
+    <Compile Include="UIElements\UICheckbox.cs" />
+    <Compile Include="UIElements\UICodeEntry.cs" />
+    <Compile Include="UIElements\Copy.cs" />
+    <Compile Include="UIElements\UIDataValue.cs" />
+    <Compile Include="UIElements\UIGrid.cs" />
+    <Compile Include="UIElements\UIHoverImage.cs" />
+    <Compile Include="UIElements\UIHoverImageButton.cs" />
+    <Compile Include="UIElements\UIRadioButton.cs" />
+    <Compile Include="UIElements\UIRadioButtonGroup.cs" />
+    <Compile Include="UIElements\UIRange.cs" />
+    <Compile Include="UIElements\UISlider.cs" />
+    <Compile Include="UIElements\UITabControl.cs" />
+    <Compile Include="UITinker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="REPL\Mono.CSharp.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
