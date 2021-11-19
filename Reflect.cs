@@ -7,7 +7,7 @@ namespace Terraria.ModKit
     static class Reflect
     {
         public static T Invoke<T>(object target, string methodName, params object[] param) =>
-            (T)Invoke(target.GetType(), methodName, param);
+            (T)target.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(target, param);
 
         public static object Invoke(Type target, string methodName, params object[] param)
         {

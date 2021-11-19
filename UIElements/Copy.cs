@@ -175,6 +175,7 @@ namespace Terraria.ModKit
                             {
                                 for (int j = 0; j < psize.Y; j++)
                                 {
+                                    
                                     Main.tile[(int) pos.X + i, (int) pos.Y + j] = new Tile(tileCopy[i, j]);
                                     //tileCopy[i, j] = (Tile)Main.tile[pos.X + i, pos.Y + j].Clone();
                                 }

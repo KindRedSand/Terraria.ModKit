@@ -81,7 +81,7 @@ namespace Terraria.ModKit
         {
             Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.5\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.6\n"+ Main.versionNumber;
 
             Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
@@ -307,7 +307,9 @@ namespace Terraria.ModKit
                     layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>//36
                     {
                         var s = Main.UIScale;
+                        var z = Main.GameZoomTarget;
                         Main.UIScale = 1f;
+                        Main.GameZoomTarget = 1f;
                         if (Main.gameMenu)
                             return false;
                         if (Copy.Visible)
@@ -315,11 +317,16 @@ namespace Terraria.ModKit
                             ucopy.Draw(Main.spriteBatch, new GameTime());
                             copy.UIDraw();
                         }
+
                         if (CheatState.Visible)
+                        {
+                            
                             inter.Draw(Main.spriteBatch, new GameTime());
-                        if(tools.visible)
+                        }
+                        if (tools.visible)
                             tools.UIDraw();
                         Main.UIScale = s;
+                        Main.GameZoomTarget = z;
                         return true;
                     }));
                     Logger.Log("Installing InterfaceLayer done!");
@@ -399,18 +406,21 @@ namespace Terraria.ModKit
             if (tools.visible)
             {
                 var s = Main.UIScale;
+                var z = Main.GameZoomTarget;
                 Main.UIScale = 1f;
+                Main.GameZoomTarget = 1f;
                 tools.UIUpdate();
                 Main.UIScale = s;
+                Main.GameZoomTarget = z;
             }
 
 
 
-            if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 1000 &&
+            if (Main.LocalPlayer.creativeTracker.ItemSacrifices.SacrificesCountByItemIdCache.Count < 5122 &&
                 Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
             {
                 Logger.Log("Unlocking all items...");
-                for (int i = 0; i < 5079; i++)
+                for (int i = 0; i < 5124; i++)
                 {
                     try
                     {

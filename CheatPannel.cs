@@ -78,9 +78,10 @@ namespace Terraria.ModKit
                 Main.LocalPlayer.mouseInterface = true;
             }
 
-            Top.Set(-offset * (Main.GameZoomTarget > 1 ? Main.GameZoomTarget * Main.GameZoomTarget * 1.3f : 1), 1f);
+            Top.Set(-offset , 1f);
             Left.Set((-Width.Pixels / 2) , 0.5f);
             BackgroundColor = Color.BlanchedAlmond.Opacity(0.1f);
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -302,10 +303,9 @@ namespace Terraria.ModKit
         //    tools.UIUpdate();
         //}
 
-        //public override void Draw(SpriteBatch spriteBatch)
-        //{
-        //    base.Draw(spriteBatch);
-        //    tools.UIDraw();
-        //}
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
     }
 }
