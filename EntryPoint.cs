@@ -77,7 +77,7 @@ namespace Terraria.ModKit
                     //result = Assembly.Load(array); 
                 }
                 //Newtonsoft.Json.JsonConvert.SerializeObject()
-                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", "SerializeObject", new object[] { new List<string>{"Terraria.ModKit", "v0.6"}});
+                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", "SerializeObject", new object[] { new List<string>{"Terraria.ModKit", "v0.6.1"}});
                 Console.WriteLine(s);
                 Logger.Log("Done! Registering initializer...");
                 //Program.LaunchGame(args);

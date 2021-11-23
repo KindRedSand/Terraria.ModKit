@@ -81,7 +81,7 @@ namespace Terraria.ModKit
         {
             Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.6\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.6.1\n"+ Main.versionNumber;
 
             Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
@@ -575,8 +575,8 @@ namespace Terraria.ModKit
                     }
                     else // 1, client
                     {
-                        NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, cursorWorldPosition.X,
-                            cursorWorldPosition.Y, 1);
+                        if(Main.netMode == 1)
+                            net_TPSync(player, cursorWorldPosition);
                         player.Teleport(cursorWorldPosition, 1);
                         player.position = cursorWorldPosition;
                         player.velocity = Vector2.Zero;
@@ -591,6 +591,13 @@ namespace Terraria.ModKit
             inter.Update(new GameTime());
             Main.UIScale = ss;
         }
+
+        private static void net_TPSync(Player player, Vector2 cursorWorldPosition)
+        {
+            NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, cursorWorldPosition.X,
+                cursorWorldPosition.Y, 1);
+        }
+
 
         public static void RevealWholeMap()
         {
