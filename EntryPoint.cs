@@ -16,7 +16,7 @@ namespace Terraria.ModKit
             try
             {
                 Logger.GameIdentifier = "Terraria";
-                Logger.VersionIdentifier = "1.4";
+                Logger.VersionIdentifier = "1.4.4";
                 Logger.Log("Loading store...");
                 Entry.Storage = new ModStorage(@"Creative");
                 Entry.Store = new ResourceStore<byte[]>(new StorageBackedResourceStore(Entry.Storage));
@@ -77,7 +77,7 @@ namespace Terraria.ModKit
                     //result = Assembly.Load(array); 
                 }
                 //Newtonsoft.Json.JsonConvert.SerializeObject()
-                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", "SerializeObject", new object[] { new List<string>{"Terraria.ModKit", "v0.6.1"}});
+                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", "SerializeObject", new object[] { new List<string>{"Terraria.ModKit", "v0.7.0"}});
                 Console.WriteLine(s);
                 Logger.Log("Done! Registering initializer...");
                 //Program.LaunchGame(args);
