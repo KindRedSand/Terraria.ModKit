@@ -56,7 +56,7 @@ namespace Terraria.ModKit.UIElements
 			Recalculate();
 		}
 
-		public override void Click(UIMouseEvent evt)
+		public override void LeftClick(UIMouseEvent evt)
 		{
 			if (clickable)
 			{
@@ -115,7 +115,7 @@ namespace Terraria.ModKit.UIElements
 			Recalculate();
 		}
 
-		public override void Click(UIMouseEvent evt)
+		public override void LeftClick(UIMouseEvent evt)
 		{
 			data.SetValue(!data.Data);
 			Recalculate();
@@ -151,7 +151,7 @@ namespace Terraria.ModKit.UIElements
 			Recalculate();
 		}
 
-		public override void Click(UIMouseEvent evt)
+		public override void LeftClick(UIMouseEvent evt)
 		{
 			if (data.Data.HasValue && data.Data.Value)
 			{

@@ -82,20 +82,20 @@ namespace Terraria.ModKit.REPL
             UIImageButton eyeDropperButton = new UIImageButton(texture);
 			eyeDropperButton.Height.Pixels = 20;
 			//eyeDropperButton.Width.Pixels = 20;
-			eyeDropperButton.OnClick += EyeDropperButton_OnClick;
+			eyeDropperButton.OnLeftClick += EyeDropperButton_OnClick;
 			eyeDropperButton.Top.Set(-26, 1f);
 			keyboardPanel.Append(eyeDropperButton);
 
             texture = Main.Assets.Request<Texture2D>("Images/UI/ButtonSeed");
 			UIHoverImageButton openText = new UIHoverImageButton(texture, texture.Frame(), "Open External Editor");
-			openText.OnClick += OpenTextButton_OnClick;
+			openText.OnLeftClick += OpenTextButton_OnClick;
 			openText.Top.Set(-26 / Main.UIScale, 1f);
 			openText.Left.Set(26 / Main.UIScale, 0f);
 			keyboardPanel.Append(openText);
 
             texture = Main.Assets.Request<Texture2D>("Images/UI/ButtonPlay");
             UIHoverImageButton runText = new UIHoverImageButton(texture, texture.Frame(), "Execute External Code");
-			runText.OnClick += RunTextButton_OnClick;
+			runText.OnLeftClick += RunTextButton_OnClick;
 			runText.Top.Set(-26, 1f);
 			runText.Left.Set(52, 0f);
 			keyboardPanel.Append(runText);

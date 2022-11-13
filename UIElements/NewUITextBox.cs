@@ -36,11 +36,17 @@ namespace Terraria.ModKit.UIElements
 			//BorderColor = Color.White;
 		}
 
-		public override void Click(UIMouseEvent evt)
-		{
-			Focus();
-			base.Click(evt);
-		}
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            Focus();
+            base.LeftClick(evt);
+        }
+
+		//public override void Click(UIMouseEvent evt)
+		//{
+		//	Focus();
+		//	base.Click(evt);
+		//}
 
 		public void SetUnfocusKeys(bool unfocusOnEnter, bool unfocusOnTab)
 		{

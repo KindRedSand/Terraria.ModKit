@@ -35,11 +35,17 @@ namespace Terraria.ModKit.UIElements
 			SetPadding(0);
         }
 
-		public override void Click(UIMouseEvent evt)
-		{
-			Focus();
-			base.Click(evt);
-		}
+		//public override void Click(UIMouseEvent evt)
+		//{
+		//	Focus();
+		//	base.Click(evt);
+		//}
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            Focus();
+            base.LeftClick(evt);
+        }
 
 		public void SetUnfocusKeys(bool unfocusOnEnter, bool unfocusOnTab)
 		{

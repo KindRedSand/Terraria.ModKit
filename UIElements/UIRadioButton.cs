@@ -31,7 +31,7 @@ namespace Terraria.ModKit.UIElements
 			}
 		}
 
-		public override void Click(UIMouseEvent evt)
+		public override void LeftClick(UIMouseEvent evt)
 		{
 			if (!partOfGroup)
 			{

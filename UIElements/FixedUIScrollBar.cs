@@ -21,12 +21,20 @@ namespace Terraria.ModKit.UIElements
 			UserInterface.ActiveInstance = temp;
 		}
 
-		public override void MouseDown(UIMouseEvent evt)
-		{
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
 			UserInterface temp = UserInterface.ActiveInstance;
-			UserInterface.ActiveInstance = userInterface;
-			base.MouseDown(evt);
-			UserInterface.ActiveInstance = temp;
-		}
+            UserInterface.ActiveInstance = userInterface;
+            base.LeftMouseDown(evt);
+            UserInterface.ActiveInstance = temp;
+}
+
+  //      public override void MouseDown(UIMouseEvent evt)
+		//{
+  //          UserInterface temp = UserInterface.ActiveInstance;
+  //          UserInterface.ActiveInstance = userInterface;
+  //          base.MouseDown(evt);
+  //          UserInterface.ActiveInstance = temp;
+		//}
 	}
 }
