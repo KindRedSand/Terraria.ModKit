@@ -81,7 +81,7 @@ namespace Terraria.ModKit
         {
             Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.7.1\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.7.2\n"+ Main.versionNumber;
 
             Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
