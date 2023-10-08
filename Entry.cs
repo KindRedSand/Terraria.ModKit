@@ -81,7 +81,7 @@ namespace Terraria.ModKit
         {
             Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.7.2\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.7.3\n"+ Main.versionNumber;
 
             Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
@@ -304,12 +304,8 @@ namespace Terraria.ModKit
                 {
                     Logger.Log("Installing InterfaceLayer...");
                     var layers = Reflect.GetF<List<GameInterfaceLayer>>(Main.instance, "_gameInterfaceLayers");
-                    layers?.Insert(36, new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>//36
+                    layers?.Insert(36,  new LegacyGameInterfaceLayer("Creative mod: Custom UI", () =>//36
                     {
-                        var s = Main.UIScale;
-                        var z = Main.GameZoomTarget;
-                        Main.UIScale = 1f;
-                        Main.GameZoomTarget = 1f;
                         if (Main.gameMenu)
                             return false;
                         if (Copy.Visible)
@@ -317,7 +313,6 @@ namespace Terraria.ModKit
                             ucopy.Draw(Main.spriteBatch, new GameTime());
                             copy.UIDraw();
                         }
-
                         if (CheatState.Visible)
                         {
                             
@@ -325,10 +320,8 @@ namespace Terraria.ModKit
                         }
                         if (tools.visible)
                             tools.UIDraw();
-                        Main.UIScale = s;
-                        Main.GameZoomTarget = z;
                         return true;
-                    }));
+                    }) { ScaleType = InterfaceScaleType.UI });
                     Logger.Log("Installing InterfaceLayer done!");
                     
                 }
