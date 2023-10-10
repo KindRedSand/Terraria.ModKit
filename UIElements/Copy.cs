@@ -235,7 +235,7 @@ namespace Terraria.ModKit
         }
 
 
-        internal void UIDraw()
+        internal void UIDraw() 
         {
             if (!Visible || Main.netMode != 0)
                 return;

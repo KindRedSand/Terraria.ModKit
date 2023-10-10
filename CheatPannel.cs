@@ -33,7 +33,21 @@ namespace Terraria.ModKit
             base.DrawSelf(spriteBatch);
 
             if (ContainsPoint(Main.MouseScreen))
+            {
                 Main.instance.MouseTextNoOverride(HoverText);
+                if (Main.mouseLeft)
+                {
+                    if (!lk)
+                    {
+                        lk = true;
+                        onPressed?.Invoke();
+                    }
+                }
+            }
+            if (!Main.mouseLeft)
+            {
+                lk = false;
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -41,18 +55,18 @@ namespace Terraria.ModKit
             if(!CheatState.Visible)
                 return;
             base.Update(gameTime);
-            if (ContainsPoint(Main.MouseScreen) && Main.mouseLeft)
-            {
-                if (!lk)
-                {
-                    lk = true;
-                    onPressed?.Invoke();
-                }
-            }
-            else
-            {
-                lk = false;
-            }
+            //if (ContainsPoint(Main.MouseScreen) && Main.mouseLeft)
+            //{
+            //    if (!lk)
+            //    {
+            //        lk = true;
+            //        onPressed?.Invoke();
+            //    }
+            //}
+            //else
+            //{
+            //    lk = false;
+            //}
         }
     }
 
@@ -77,11 +91,9 @@ namespace Terraria.ModKit
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
-
-            Top.Set(-offset , 1f);
+            Top.Set(-offset, 1f);
             Left.Set((-Width.Pixels / 2) , 0.5f);
             BackgroundColor = Color.BlanchedAlmond.Opacity(0.1f);
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -96,6 +108,11 @@ namespace Terraria.ModKit
             if (!Visible)
                 return;
             base.DrawSelf(spriteBatch);
+            // Checking ContainsPoint and then setting mouseInterface to true is very common. This causes clicks on this UIElement to not cause the player to use current items. 
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
         }
 
         protected override void DrawChildren(SpriteBatch spriteBatch)
@@ -118,10 +135,9 @@ namespace Terraria.ModKit
         private static CheatPannel mainPannel, difficultyPannel, copyPannel;
         //private static REPLTool tools;
 
+
         public override void OnInitialize()
         {
- 
-            
             mainPannel = new CheatPannel();
             mainPannel.Left.Set(-(310/2), 0.5f);
             mainPannel.Top.Set(-55, 1f);
@@ -206,7 +222,7 @@ namespace Terraria.ModKit
 
             texture = Main.Assets.Request<Texture2D>(@"Images\ui\Settings_Inputs_2");
             journeyButton = new UIHoverImageButton(texture, texture.Frame(2, 2, 1, 0), "Open REPL",
-                () =>
+                () => 
                 {
                     Entry.tools.visible = !Entry.tools.visible;
                 });
@@ -305,6 +321,7 @@ namespace Terraria.ModKit
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
             base.Draw(spriteBatch);
         }
     }
