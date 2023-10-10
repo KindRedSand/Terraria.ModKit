@@ -311,7 +311,7 @@ namespace Terraria.ModKit
                         if (Copy.Visible)
                         {
                             ucopy.Draw(Main.spriteBatch, new GameTime());
-                            copy.UIDraw();
+                            //copy.UIDraw();
                         }
                         if (CheatState.Visible)
                         {
@@ -322,6 +322,17 @@ namespace Terraria.ModKit
                             tools.UIDraw();
                         return true;
                     }) { ScaleType = InterfaceScaleType.UI });
+                    layers?.Insert(37, new LegacyGameInterfaceLayer("Creative mod: Copy Overlay", () =>//36
+                        {
+                            if (Main.gameMenu)
+                                return false;
+                            if (Copy.Visible)
+                            {
+                                copy.UIDraw();
+                            }
+                            return true;
+                        })
+                        { ScaleType = InterfaceScaleType.Game });
                     Logger.Log("Installing InterfaceLayer done!");
                     
                 }
