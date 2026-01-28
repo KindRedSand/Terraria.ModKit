@@ -54,8 +54,7 @@ namespace Terraria.ModKit.Tools.REPL
 		{
 			if (visible)
             {
-                var f = Main.UIScale;
-                Main.UIScale = 1f;
+				toolKit.Init();
                 toolKit.Draw(Main.spriteBatch);
 				if (EyedropperActive)
 				{
@@ -75,8 +74,6 @@ namespace Terraria.ModKit.Tools.REPL
 
 					Main.LocalPlayer.mouseInterface = true;
 				}
-
-                Main.UIScale = f;
             }
 		}
 		internal void Toggled()

@@ -11,6 +11,7 @@ using Terraria.GameContent.UI.States;
 using Terraria.GameInput;
 using Terraria.ModKit.Tools.REPL;
 using Terraria.UI;
+using TerrariaM.ID;
 
 namespace Terraria.ModKit
 {
@@ -153,7 +154,8 @@ namespace Terraria.ModKit
                 {
                     Entry.CycleMode();
                     
-                    cycleMode.Color = Main.GameMode == GameModeData.CreativeMode.Id ? Color.Gold : Color.White;
+                    cycleMode.Color = Main.GameMode == GameModeId.Creative //GameModeData.CreativeMode.Id 
+                        ? Color.Gold : Color.White;
                 });
             buttons.Add(journeyButton);
             mainPannel.Append(journeyButton);
@@ -222,7 +224,7 @@ namespace Terraria.ModKit
 
             texture = Main.Assets.Request<Texture2D>(@"Images\ui\Settings_Inputs_2");
             journeyButton = new UIHoverImageButton(texture, texture.Frame(2, 2, 1, 0), "Open REPL",
-                () => 
+                () =>
                 {
                     Entry.tools.visible = !Entry.tools.visible;
                 });
@@ -247,7 +249,7 @@ namespace Terraria.ModKit
             journeyButton = new UIHoverImageButton(texture, texture.Frame(), "Journey",
                 () =>
                 {
-                    Main.GameMode = GameModeData.CreativeMode.Id;
+                    Main.GameMode = GameModeId.Creative;//GameModeData.CreativeMode.Id;
                     Main.LocalPlayer.difficulty = 3;
                 });
             journeyButton.Left.Set(0, 0);
@@ -258,7 +260,7 @@ namespace Terraria.ModKit
             journeyButton = new UIHoverImageButton(texture, texture.Frame(), "Classic",
                 () =>
                 {
-                    Main.GameMode = GameModeData.NormalMode.Id;
+                    Main.GameMode = GameModeId.Normal;//GameModeData.NormalMode.Id;
                     Main.LocalPlayer.difficulty = 0;
                 });
             journeyButton.Left.Set(50, 0);
@@ -269,7 +271,7 @@ namespace Terraria.ModKit
             journeyButton = new UIHoverImageButton(texture, texture.Frame(), "Expert",
                 () =>
                 {
-                    Main.GameMode = GameModeData.ExpertMode.Id;
+                    Main.GameMode = GameModeId.Expert;//GameModeData.ExpertMode.Id;
                     Main.LocalPlayer.difficulty = 0;
                 });
             journeyButton.Left.Set(100, 0);
@@ -280,7 +282,7 @@ namespace Terraria.ModKit
             journeyButton = new UIHoverImageButton(texture, texture.Frame(), "Master",
                 () =>
                 {
-                    Main.GameMode = GameModeData.MasterMode.Id;
+                    Main.GameMode = GameModeId.Master;//GameModeData.MasterMode.Id;
                     Main.LocalPlayer.difficulty = 0;
                 });
             journeyButton.Left.Set(150, 0);

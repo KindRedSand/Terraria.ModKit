@@ -21,7 +21,7 @@ namespace Terraria.ModKit
             try
             {
                 Logger.GameIdentifier = "Terraria";
-                Logger.VersionIdentifier = "1.4.4.9";
+                Logger.VersionIdentifier = "1.4.5";
                 Logger.Log("Loading store...");
                 Entry.Storage = new ModStorage(@"Creative");
                 Entry.Store = new ResourceStore<byte[]>(new StorageBackedResourceStore(Entry.Storage));
@@ -31,14 +31,13 @@ namespace Terraria.ModKit
 
                 Logger.Log("Start pre loading assemblies..");
                 AppDomain.CurrentDomain.AssemblyResolve += loaderdelegate;
-                Logger.Log("Finished assemblies pre loading loading");
-
 
                 //Force load Newtonsoft.Json to memory
                 Logger.Log("Force loading Newtonsoft.Json...");
-                string text = Array.Find<string>(typeof(Program).Assembly.GetManifestResourceNames(), (string element) => element.EndsWith("Newtonsoft.Json.dll"));
+                string text = Array.Find<string>(typeof(Program).Assembly.GetManifestResourceNames(),
+                    (string element) => element.EndsWith("Newtonsoft.Json.dll"));
                 Assembly result;
-                using (Stream manifestResourceStream = typeof(Program).Assembly.GetManifestResourceStream(text)) 
+                using (Stream manifestResourceStream = typeof(Program).Assembly.GetManifestResourceStream(text))
                 {
                     byte[] array = new byte[manifestResourceStream.Length];
                     manifestResourceStream.Read(array, 0, array.Length);
@@ -46,7 +45,9 @@ namespace Terraria.ModKit
                     //result = Assembly.Load(array); 
                 }
                 //Newtonsoft.Json.JsonConvert.SerializeObject()
-                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", "SerializeObject", new object[] { new List<string>{"Terraria.ModKit", "v0.7.3.1"}});
+                var s = (string)Reflect.InvokeS(result, "Newtonsoft.Json.JsonConvert", 
+                    "SerializeObject", new object[]
+                        { new List<string>{"Terraria.ModKit", "v0.7.4"}});
                 Console.WriteLine(s);
                 Logger.Log("Done! Registering initializer...");
                 //Program.LaunchGame(args);
@@ -56,10 +57,11 @@ namespace Terraria.ModKit
 
                 Terraria.Main.OnEngineLoad += Entry.Initialise;
 
-
                 Logger.Log("Running game...");
-                Reflect.Invoke(typeof(WindowsLaunch), "Main", BindingFlags.Static | BindingFlags.NonPublic,
-                    args);
+                // Reflect.Invoke(typeof(WindowsLaunch), "Main", 
+                //     BindingFlags.Static | BindingFlags.NonPublic, args);
+                
+                TerrariaM.WindowsLaunch.MainW(args);
             }
             catch (Exception e)
             {

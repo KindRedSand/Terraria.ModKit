@@ -296,6 +296,17 @@ namespace Terraria.ModKit.REPL
 			//sb.Append(buffer);
 			pendingAdd.Add(new UICodeEntry(sb.ToString(), codeType));
 		}
+
+		private bool firstInit = true;
+        public void Init()
+        {
+			if(!firstInit)
+				return;
+			firstInit = false;
+
+            codeTextBox.SetText("clear");
+			EnterAction();
+        }
 	}
 
 	public static class UIListExtensions

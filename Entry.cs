@@ -13,6 +13,8 @@ using Terraria.ID;
 using Terraria.ModKit.Razorwing.Overrides;
 using Terraria.ModKit.Tools.REPL;
 using Terraria.UI;
+using TerrariaM.ID;
+
 // ReSharper disable PossibleLossOfFraction
 // ReSharper disable FieldCanBeMadeReadOnly.Local
 
@@ -81,7 +83,7 @@ namespace Terraria.ModKit
         {
             Logger.Log("Entering mod initialize. Registering update event");
             Main.OnTickForInternalCodeOnly += Update;
-            Main.versionNumber = "ModKit v0.7.3.1\n"+ Main.versionNumber;
+            Main.versionNumber = "ModKit v0.7.4\n"+ Main.versionNumber;
 
             Logger.Log("Loading configs...");
             creativeConfig = new CreativeInputConfig(Storage);
@@ -319,7 +321,9 @@ namespace Terraria.ModKit
                             inter.Draw(Main.spriteBatch, new GameTime());
                         }
                         if (tools.visible)
+                        {
                             tools.UIDraw();
+                        }
                         return true;
                     }) { ScaleType = InterfaceScaleType.UI });
                     layers?.Insert(37, new LegacyGameInterfaceLayer("Creative mod: Copy Overlay", () =>//36
@@ -420,11 +424,10 @@ namespace Terraria.ModKit
 
 
 
-            if (Main.LocalPlayer.creativeTracker.ItemSacrifices.GetSacrificeCount(5124) < 1 &&
-                Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
+            if (Main.keyState.IsKeyDown(CreativeInput[2]) && Main.oldKeyState.IsKeyUp(CreativeInput[2]))
             {
                 Logger.Log("Unlocking all items...");
-                for (int i = 0; i < 6000; i++)
+                for (int i = 0; i < 10000; i++)
                 {
                     try
                     {
@@ -433,8 +436,8 @@ namespace Terraria.ModKit
                     catch (Exception e)
                     {
                         if (i >= 5122) continue;
-                        Console.WriteLine(e.Message);
-                        break;
+                        //Console.WriteLine(e.Message);
+                        //break;
                     }
                 }
 
@@ -612,7 +615,17 @@ namespace Terraria.ModKit
                 for (int j = 0; j < Main.maxTilesY; j++)
                 {
                     if (WorldGen.InWorld(i, j))
-                        Main.Map.Update(i, j, 255);
+                    {
+                        try
+                        {
+                            Main.Map.Update(i, j, 255);
+                        }
+                        catch (Exception)
+                        {
+                            break;
+                            // ignored
+                        }
+                    }
                 }
             }
             Main.refreshMap = true;
@@ -652,7 +665,8 @@ namespace Terraria.ModKit
             {
                 oldMode = Main.GameMode;
                 oldPlayerMode = Main.LocalPlayer.difficulty;
-                Main.GameMode = GameModeData.CreativeMode.Id;
+                Main.GameMode = GameModeId.Creative;//GameModeData.CreativeMode.Id;
+                
                 Main.LocalPlayer.difficulty = 3;
                 if (!Main.playerInventory)
                     Main.playerInventory = true;
