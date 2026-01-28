@@ -31,7 +31,13 @@ namespace TerrariaM
       public const string TerrariaSaveFolderPath = "Terraria";
       private static int ThingsToLoad;
       private static int ThingsLoaded;
-      public static bool LoadedEverything;
+
+      public static bool LoadedEverything
+      {
+        get => Terraria.Program.LoadedEverything;
+        set => Terraria.Program.LoadedEverything = value;
+      }
+      
       public static IntPtr JitForcedMethodCache;
 
       public static float LoadedPercentage =>
