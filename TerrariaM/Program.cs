@@ -40,10 +40,16 @@ namespace TerrariaM
       public static void StartForceLoad()
       {
         if (!Main.SkipAssemblyLoad)
+        {
+          //Fix game infinite loading untill debugger are attached.
+          Main.SkipAssemblyLoad = true;
+          
+          //We still need to preload stuff to reduce runtime stutters
           new Thread(new ParameterizedThreadStart(Program.ForceLoadThread))
           {
             IsBackground = true
           }.Start();
+        }
         else
           Program.LoadedEverything = true;
       }
@@ -173,7 +179,7 @@ namespace TerrariaM
         if (Platform.IsOSX)
           Main.OnEngineLoad += (Action) (() => Main.instance.IsMouseVisible = false);
         else if (Platform.IsWindows)
-          Main.OnEngineLoad += (Action) (() => Platform.Get<IMouseNotifier>()?.AddMouseHandler(
+          Main.OnEngineLoad += (Action) (() => Platform.Get<ReLogic.OS.IMouseNotifier>()?.AddMouseHandler(
             (Action<bool>) (connected =>
             {
               if (!connected)
