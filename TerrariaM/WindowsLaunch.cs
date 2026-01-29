@@ -45,7 +45,7 @@ namespace TerrariaM
             AppDomain.CurrentDomain.AssemblyResolve += (ResolveEventHandler) ((sender, sargs) =>
             {
                 string resourceName = new AssemblyName(sargs.Name).Name + ".dll";
-                string name = Array.Find<string>(typeof (Program).Assembly.GetManifestResourceNames(), (Predicate<string>) (element => element.EndsWith(resourceName)));
+                string name = Array.Find<string>(typeof (Terraria.Program).Assembly.GetManifestResourceNames(), (Predicate<string>) (element => element.EndsWith(resourceName)));
                 if (name == null)
                     return (Assembly) null;
                 using (Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name))
@@ -55,7 +55,7 @@ namespace TerrariaM
                     return Assembly.Load(numArray);
                 }
             });
-            Program.LaunchGame(args);
+            ProgramM.LaunchGame(args);
         }
 
         public delegate bool HandlerRoutine(WindowsLaunch.CtrlTypes ctrlType);

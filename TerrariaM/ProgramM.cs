@@ -19,8 +19,8 @@ using Terraria.Utilities;
 // ReSharper disable All
 namespace TerrariaM
 {
-    //Decompiled Terraria.Program
-    public static class Program
+    //Decompiled Terraria.ProgramM
+    public static class ProgramM
     {
       public static bool IsXna = true;
       public static bool IsFna = false;
@@ -41,7 +41,7 @@ namespace TerrariaM
       public static IntPtr JitForcedMethodCache;
 
       public static float LoadedPercentage =>
-        Program.ThingsToLoad == 0 ? 1f : (float) Program.ThingsLoaded / (float) Program.ThingsToLoad;
+        ProgramM.ThingsToLoad == 0 ? 1f : (float) ProgramM.ThingsLoaded / (float) ProgramM.ThingsToLoad;
 
       public static void StartForceLoad()
       {
@@ -51,40 +51,40 @@ namespace TerrariaM
           Main.SkipAssemblyLoad = true;
           
           //We still need to preload stuff to reduce runtime stutters
-          new Thread(new ParameterizedThreadStart(Program.ForceLoadThread))
+          new Thread(new ParameterizedThreadStart(ProgramM.ForceLoadThread))
           {
             IsBackground = true
           }.Start();
         }
         else
-          Program.LoadedEverything = true;
+          ProgramM.LoadedEverything = true;
       }
 
       public static void ForceLoadThread(object threadContext)
       {
-        Program.ForceLoadAssembly(Assembly.GetExecutingAssembly(), true);
-        Program.LoadedEverything = true;
+        ProgramM.ForceLoadAssembly(Assembly.GetExecutingAssembly(), true);
+        ProgramM.LoadedEverything = true;
       }
 
       private static void ForceJITOnAssembly(Assembly assembly)
       {
         foreach (Type type in assembly.GetTypes())
         {
-          foreach (MethodInfo methodInfo in Program.IsMono
+          foreach (MethodInfo methodInfo in ProgramM.IsMono
                      ? type.GetMethods()
                      : type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static |
                                        BindingFlags.Public | BindingFlags.NonPublic))
           {
             if (!methodInfo.IsAbstract && !methodInfo.ContainsGenericParameters && methodInfo.GetMethodBody() != null)
             {
-              if (Program.IsMono)
-                Program.JitForcedMethodCache = methodInfo.MethodHandle.GetFunctionPointer();
+              if (ProgramM.IsMono)
+                ProgramM.JitForcedMethodCache = methodInfo.MethodHandle.GetFunctionPointer();
               else
                 RuntimeHelpers.PrepareMethod(methodInfo.MethodHandle);
             }
           }
 
-          ++Program.ThingsLoaded;
+          ++ProgramM.ThingsLoaded;
         }
       }
 
@@ -99,11 +99,11 @@ namespace TerrariaM
 
       private static void ForceLoadAssembly(Assembly assembly, bool initializeStaticMembers)
       {
-        Program.ThingsToLoad = assembly.GetTypes().Length;
-        Program.ForceJITOnAssembly(assembly);
+        ProgramM.ThingsToLoad = assembly.GetTypes().Length;
+        ProgramM.ForceJITOnAssembly(assembly);
         if (!initializeStaticMembers)
           return;
-        Program.ForceStaticInitializers(assembly);
+        ProgramM.ForceStaticInitializers(assembly);
       }
 
       private static void ForceLoadAssembly(string name, bool initializeStaticMembers)
@@ -121,7 +121,7 @@ namespace TerrariaM
 
         if (assembly == (Assembly) null)
           assembly = Assembly.Load(name);
-        Program.ForceLoadAssembly(assembly, initializeStaticMembers);
+        ProgramM.ForceLoadAssembly(assembly, initializeStaticMembers);
       }
 
       private static void SetupLogging()
@@ -161,22 +161,25 @@ namespace TerrariaM
         }
       }
 
+      private static bool HasSteamFlag { get; set; } = false;
       public static void LaunchGame(string[] args, bool monoArgs = false)
       {
         Thread.CurrentThread.Name = "Main Thread";
         if (monoArgs)
           args = Utils.ConvertMonoArgsToDotNet(args);
-        if (Program.IsFna)
-          Program.TrySettingDefaultFNADriver(args);
+        if (ProgramM.IsFna)
+          ProgramM.TrySettingDefaultFNADriver(args);
         Program.LaunchParameters = Utils.ParseArguements(args);
+        if(Program.LaunchParameters.ContainsKey("-steam"))
+          HasSteamFlag = true;
         Program.SavePath = Program.LaunchParameters.ContainsKey("-savedirectory")
           ? Program.LaunchParameters["-savedirectory"]
           : Platform.Get<IPathService>().GetStoragePath("Terraria");
         ThreadPool.SetMinThreads(8, 8);
-        Program.InitializeConsoleOutput();
-        Program.SetupLogging();
+        ProgramM.InitializeConsoleOutput();
+        ProgramM.SetupLogging();
         Platform.Get<IWindowService>().SetQuickEditEnabled(false);
-        Program.RunGame();
+        ProgramM.RunGame();
       }
 
       public static void RunGame()
@@ -199,16 +202,19 @@ namespace TerrariaM
           {
             Lang.InitializeLegacyLocalization();
             //Disable steam since changes in libs now break steamworks init
-            SocialAPI.Initialize(SocialMode.None);
+            if(HasSteamFlag)
+              SocialAPI.Initialize(SocialMode.Steam);
+            else
+              SocialAPI.Initialize(SocialMode.None);
             LaunchInitializer.LoadParameters(game);
-            Main.OnEnginePreload += new Action(Program.StartForceLoad);
+            Main.OnEnginePreload += new Action(ProgramM.StartForceLoad);
             if (Main.dedServ)
               game.DedServ();
             game.Run();
           }
           catch (Exception ex)
           {
-            Program.DisplayException(ex);
+            ProgramM.DisplayException(ex);
           }
         }
       }
